@@ -75,7 +75,7 @@ img {
   text-transform: uppercase;
   color: var(--aqua);
   font-weight: 700;
-  margin: 0 0 1rem;
+  margin: 0 0 0.35rem;
 }
 
 .signature {
@@ -167,7 +167,7 @@ img {
 .section__head {
   text-align: center;
   max-width: 620px;
-  margin: 0 auto clamp(2rem, 5vw, 3rem);
+  margin: 0 auto clamp(1.25rem, 3.5vw, 2rem);
 }
 
 .section__title {
