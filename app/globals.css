@@ -139,30 +139,19 @@ img {
   order: 1;
   position: relative;
   width: 100%;
-  max-width: 360px;
+  max-width: 400px;
   /* hug the right (inline-start) edge of the hero */
   margin-inline-end: auto;
 }
 
+/* Transparent PNG — let the colour splash float on the section background
+   with a soft shadow that follows its shape (no card frame). */
 .hero__portrait img {
   width: 100%;
   height: auto;
-  border-radius: 16px;
-  box-shadow: var(--shadow);
   aspect-ratio: 1 / 1;
-  object-fit: cover;
-}
-
-.hero__portrait::after {
-  content: "";
-  position: absolute;
-  inset-inline-end: -14px;
-  bottom: -14px;
-  width: 62%;
-  height: 62%;
-  border: 2px solid var(--aqua-soft);
-  border-radius: 14px;
-  z-index: -1;
+  object-fit: contain;
+  filter: drop-shadow(0 16px 26px rgba(20, 58, 56, 0.18));
 }
 
 /* ---------- Section shell ---------- */
@@ -422,9 +411,6 @@ img {
   .feature--quote-start .feature__text,
   .feature--quote-end .feature__text {
     order: 2;
-  }
-  .hero__portrait::after {
-    display: none;
   }
 }
 
