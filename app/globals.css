@@ -128,11 +128,19 @@ img {
   margin-top: 0.6rem;
 }
 
+.hero__welcome {
+  font-family: var(--font-serif), serif;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  font-weight: 500;
+  color: var(--aqua);
+  margin: 0 0 0.75rem;
+}
+
 .hero__portrait {
   order: 1;
   position: relative;
   width: 100%;
-  max-width: 300px;
+  max-width: 360px;
   /* hug the right (inline-start) edge of the hero */
   margin-inline-end: auto;
 }
@@ -140,9 +148,9 @@ img {
 .hero__portrait img {
   width: 100%;
   height: auto;
-  border-radius: 14px;
+  border-radius: 16px;
   box-shadow: var(--shadow);
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
 }
 
@@ -332,6 +340,13 @@ img {
 
 /* ---------- Responsive ---------- */
 @media (max-width: 720px) {
+  /* Longer story copy needs room. Keep the portrait on the right (order 1) but
+     as a fixed, moderate size at the top, and give the story the rest. */
+  .hero__grid {
+    grid-template-columns: minmax(120px, 150px) 1fr;
+    align-items: start;
+    gap: 1.25rem;
+  }
   .feature__grid {
     grid-template-columns: 1fr;
   }

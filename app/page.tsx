@@ -13,9 +13,9 @@ const ARTIST = {
 };
 
 // הסיפור שלי — above the fold (פסקה בכתב מוטה, כמו ציטוט)
+const HERO_WELCOME = "ברוכים הבאים לעולם שלי";
 const HERO_STORY =
-  "התחלתי לצייר כשחיפשתי דרך לתפוס את האור שבין הרגעים. כל יצירה היא פיסה מהעולם הפנימי שלי — צבע, מים, ותנועה שלא נעצרת. אני מזמינה אתכם להיכנס פנימה.";
-const HERO_SIGNATURE = "— הסיפור שלי";
+  "האהבה שלי לאומנות וליצירה מלווה אותי מאז שאני זוכרת את עצמי. אחרי כמה שנים של הפסקה, החלטתי לחזור הביתה – אל הצבעים, המכחולים והחומר. הפעם, בחרתי לשים את האומנות במרכז הבמה של חיי, להשקיע בזה את כל כולי, להתפתח ולחדש בלי הפסקה.";
 
 // יצירות בקרוסלה
 const GALLERY = [
@@ -52,10 +52,10 @@ export default function Page() {
         <div className="container hero__grid">
           <div className="hero__portrait">
             <Image
-              src="/portrait.svg"
+              src="/portrait.png"
               alt={`תמונת פורטרט של ${ARTIST.name}`}
-              width={900}
-              height={1200}
+              width={1254}
+              height={1254}
               priority
             />
           </div>
@@ -64,8 +64,8 @@ export default function Page() {
               {ARTIST.name}
               <span>{ARTIST.subtitle}</span>
             </h1>
+            <p className="hero__welcome">{HERO_WELCOME}</p>
             <blockquote className="quote">{HERO_STORY}</blockquote>
-            <p className="signature">{HERO_SIGNATURE}</p>
           </div>
         </div>
       </header>
