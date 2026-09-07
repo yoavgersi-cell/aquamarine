@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Carousel, type Artwork } from "./carousel";
 
 /* =========================================================================
  *  תוכן לעריכה — כל הטקסטים, השמות והלינקים במקום אחד.
@@ -17,13 +18,12 @@ const HERO_WELCOME = "ברוכים הבאים לעולם שלי";
 const HERO_STORY =
   "האהבה שלי לאומנות וליצירה מלווה אותי מאז שאני זוכרת את עצמי. אחרי כמה שנים של הפסקה, החלטתי לחזור הביתה – אל הצבעים, המכחולים והחומר. הפעם, בחרתי לשים את האומנות במרכז הבמה של חיי, להשקיע בזה את כל כולי, להתפתח ולחדש בלי הפסקה.";
 
-// יצירות בקרוסלה
-const GALLERY = [
-  { src: "/art-1.svg", caption: "ללא כותרת, אקריליק על בד" },
-  { src: "/art-2.svg", caption: "גלים, טכניקה מעורבת" },
-  { src: "/art-3.svg", caption: "שקט, צבעי מים" },
-  { src: "/art-4.svg", caption: "עומק, שמן על בד" },
-  { src: "/art-5.svg", caption: "בין הצבעים, אקריליק" },
+// יצירות בקרוסלה. אפשר להוסיף caption לכל יצירה (שם/טכניקה) והוא יופיע מתחתיה.
+const GALLERY: Artwork[] = [
+  { src: "/art-panda.png", alt: "פנדה אדומה עם משקפיים", w: 1165, h: 1350 },
+  { src: "/art-plumeria.png", alt: "פרחים לבנים מול הים", w: 1254, h: 1254 },
+  { src: "/art-sculpture.png", alt: "פסל מופשט בכחול וירוק", w: 1086, h: 1449 },
+  { src: "/art-zebra.png", alt: "זברה עם זר עלים", w: 1117, h: 1408 },
 ];
 
 // סקשן 1 — ציטוט מימין, יצירה משמאל
@@ -78,20 +78,7 @@ export default function Page() {
             כמה מהיצירות
           </h2>
         </div>
-        <div className="carousel" role="list">
-          {GALLERY.map((item, i) => (
-            <figure className="carousel__item" role="listitem" key={i}>
-              <Image
-                src={item.src}
-                alt={item.caption}
-                width={1000}
-                height={1000}
-              />
-              <figcaption className="carousel__caption">{item.caption}</figcaption>
-            </figure>
-          ))}
-        </div>
-        <p className="carousel__hint">← החליקו לצדדים לגלישה →</p>
+        <Carousel items={GALLERY} />
       </section>
 
       {/* ---------- סקשן 1: ציטוט מימין, יצירה משמאל ---------- */}

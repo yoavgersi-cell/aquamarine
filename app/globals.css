@@ -189,38 +189,50 @@ img {
 }
 
 /* ---------- Carousel ---------- */
+/* Slide + its side peek: one card is centred and the neighbours peek in from
+   both edges, which reads unmistakably as a swipeable carousel on mobile. */
 .carousel {
-  display: flex;
-  gap: 1.1rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding: 0.5rem clamp(1.25rem, 5vw, 3rem) 1.5rem;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--aqua-soft) transparent;
+  position: relative;
 }
 
-.carousel::-webkit-scrollbar {
-  height: 8px;
+.carousel__track {
+  display: flex;
+  gap: clamp(0.75rem, 3vw, 1.25rem);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  /* leading/trailing space so the first and last cards can reach the centre */
+  padding: 0.5rem calc(50% - min(40vw, 180px)) 1.5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
-.carousel::-webkit-scrollbar-thumb {
-  background: var(--aqua-soft);
-  border-radius: 99px;
+
+.carousel__track::-webkit-scrollbar {
+  display: none;
 }
 
 .carousel__item {
-  flex: 0 0 78%;
-  max-width: 340px;
+  flex: 0 0 min(80vw, 360px);
   scroll-snap-align: center;
+  opacity: 0.4;
+  transition: opacity 0.35s ease;
 }
 
-.carousel__item img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 12px;
+.carousel__item.is-active {
+  opacity: 1;
+}
+
+.carousel__frame {
+  aspect-ratio: 4 / 5;
+  background: #ffffff;
+  border-radius: 14px;
   box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.carousel__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .carousel__caption {
@@ -230,11 +242,66 @@ img {
   text-align: center;
 }
 
-.carousel__hint {
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.85rem;
-  margin-top: 0.25rem;
+/* arrows */
+.carousel__arrow {
+  position: absolute;
+  top: calc(42% );
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--aqua);
+  font-size: 1.7rem;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 20px -8px rgba(20, 58, 56, 0.5);
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.carousel__arrow:hover {
+  transform: translateY(-50%) scale(1.06);
+}
+
+.carousel__arrow--prev {
+  inset-inline-start: clamp(0.25rem, 3vw, 2rem);
+}
+
+.carousel__arrow--next {
+  inset-inline-end: clamp(0.25rem, 3vw, 2rem);
+}
+
+.carousel__arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* dots */
+.carousel__dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.carousel__dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  background: var(--seafoam-deep);
+  transition: background 0.2s ease, width 0.2s ease;
+}
+
+.carousel__dot.is-active {
+  background: var(--aqua);
+  width: 24px;
 }
 
 /* ---------- Feature (alternating quote + artwork) ---------- */
