@@ -26,20 +26,24 @@ const GALLERY: Artwork[] = [
   { src: "/art-zebra.png", alt: "זברה עם זר עלים", w: 1117, h: 1408 },
 ];
 
-// סקשן 1 — ציטוט מימין, יצירה משמאל
+// סקשן 1 — ציטוט מימין, יצירה משמאל  (עדיין תוכן זמני — ממתין לחומרים)
 const FEATURE_1 = {
   quote:
     "אני לא מציירת מה שאני רואה, אלא מה שאני מרגישה כשאני עוצמת עיניים. הצבע הוא השפה, והבד הוא המקום היחיד שבו אני באמת שקטה.",
   signature: "— על התהליך",
   art: "/feature-1.svg",
+  w: 1000,
+  h: 1100,
 };
 
-// סקשן 2 — ציטוט משמאל (כתב מוטה), יצירה מימין
+// סקשן 2 — ציטוט משמאל, יצירה מימין
 const FEATURE_2 = {
   quote:
-    "כל גוון של תכלת נושא בתוכו סיפור אחר. יש בו את הים של הילדות, ואת השמיים שאליהם אני עדיין מסתכלת בתקווה.",
-  signature: "— על ההשראה",
-  art: "/feature-2.svg",
+    "העולם שלי מתפרש על פני מגוון מדיומים שמתפתחים ומשתנים כל הזמן: החל מציורי קנבס עזים וכדים צבועים בעבודת יד שמקבלים חיים חדשים, ועד ליצירות פופ-ארט מודרניות ומפתיעות, המשלבות קוביות לגו יחד עם חומרים מהטבע – כמו עציצי לגו ייחודיים שיוצרים משהו חדש ומרתק בעין.",
+  signature: "",
+  art: "/feature-2.png",
+  w: 1254,
+  h: 1254,
 };
 
 export default function Page() {
@@ -86,14 +90,16 @@ export default function Page() {
         <div className="container feature__grid feature--quote-start">
           <div className="feature__text">
             <blockquote className="quote">{FEATURE_1.quote}</blockquote>
-            <p className="signature">{FEATURE_1.signature}</p>
+            {FEATURE_1.signature ? (
+              <p className="signature">{FEATURE_1.signature}</p>
+            ) : null}
           </div>
           <div className="feature__art">
             <Image
               src={FEATURE_1.art}
               alt="יצירה נבחרת"
-              width={1000}
-              height={1100}
+              width={FEATURE_1.w}
+              height={FEATURE_1.h}
             />
           </div>
         </div>
@@ -105,14 +111,16 @@ export default function Page() {
           <div className="feature__art">
             <Image
               src={FEATURE_2.art}
-              alt="יצירה נבחרת"
-              width={1000}
-              height={1100}
+              alt="פרנג'יפני מול הים — יצירה ממוסגרת בסלון"
+              width={FEATURE_2.w}
+              height={FEATURE_2.h}
             />
           </div>
           <div className="feature__text">
             <blockquote className="quote">{FEATURE_2.quote}</blockquote>
-            <p className="signature">{FEATURE_2.signature}</p>
+            {FEATURE_2.signature ? (
+              <p className="signature">{FEATURE_2.signature}</p>
+            ) : null}
           </div>
         </div>
       </section>
