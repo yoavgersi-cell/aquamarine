@@ -167,19 +167,7 @@ export default function Page() {
             <span className="footer__name">{ARTIST.name}</span>
             <span className="footer__role">{ARTIST.subtitle}</span>
           </div>
-          <div className="footer__meta">
-            <a
-              className="footer__link"
-              href={waHref}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {ARTIST.phone}
-            </a>
-            <span className="footer__copy">
-              © {year} מרין אטיה זוהר · כל הזכויות שמורות
-            </span>
-          </div>
+          <span className="footer__copy">© {year} · כל הזכויות שמורות</span>
         </div>
       </footer>
     </main>
