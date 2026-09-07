@@ -64,11 +64,13 @@ export default function Page() {
             />
           </div>
           <div className="hero__story">
-            <h1 className="hero__name">
-              {ARTIST.name}
-              <span>{ARTIST.subtitle}</span>
-            </h1>
-            <p className="hero__welcome">{HERO_WELCOME}</p>
+            <div className="hero__intro">
+              <h1 className="hero__name">
+                {ARTIST.name}
+                <span>{ARTIST.subtitle}</span>
+              </h1>
+              <p className="hero__welcome">{HERO_WELCOME}</p>
+            </div>
             <blockquote className="quote">{HERO_STORY}</blockquote>
           </div>
         </div>

@@ -393,12 +393,34 @@ img {
 
 /* ---------- Responsive ---------- */
 @media (max-width: 720px) {
-  /* Longer story copy needs room. Keep the portrait on the right (order 1) but
-     as a fixed, moderate size at the top, and give the story the rest. */
+  /* Mobile hero: portrait (right) sits beside the name + welcome (left) at a
+     matching height, and the full story flows below across the whole width —
+     readable, not a narrow ribbon. */
   .hero__grid {
-    grid-template-columns: minmax(120px, 150px) 1fr;
+    /* RTL: first column track sits on the right → portrait right, intro left. */
+    grid-template-columns: minmax(128px, 158px) 1fr;
+    grid-template-areas:
+      "portrait intro"
+      "story story";
     align-items: start;
-    gap: 1.25rem;
+    column-gap: 1.1rem;
+    row-gap: 1.1rem;
+  }
+  .hero__story {
+    display: contents;
+  }
+  .hero__intro {
+    grid-area: intro;
+    align-self: center;
+  }
+  .hero__portrait {
+    grid-area: portrait;
+    max-width: 158px;
+    margin: 0;
+  }
+  .hero__story > .quote {
+    grid-area: story;
+    max-width: 60ch;
   }
   .feature__grid {
     grid-template-columns: 1fr;
