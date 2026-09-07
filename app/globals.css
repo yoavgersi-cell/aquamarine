@@ -133,6 +133,7 @@ img {
   font-weight: 500;
   color: var(--aqua);
   margin: 0 0 0.75rem;
+  text-wrap: balance;
 }
 
 .hero__portrait {
@@ -228,44 +229,6 @@ img {
   font-size: 0.92rem;
   color: var(--muted);
   text-align: center;
-}
-
-/* arrows */
-.carousel__arrow {
-  position: absolute;
-  top: calc(42% );
-  transform: translateY(-50%);
-  z-index: 3;
-  width: 44px;
-  height: 44px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--aqua);
-  font-size: 1.7rem;
-  line-height: 1;
-  display: grid;
-  place-items: center;
-  box-shadow: 0 8px 20px -8px rgba(20, 58, 56, 0.5);
-  transition: opacity 0.2s ease, transform 0.15s ease;
-}
-
-.carousel__arrow:hover {
-  transform: translateY(-50%) scale(1.06);
-}
-
-.carousel__arrow--prev {
-  inset-inline-start: clamp(0.25rem, 3vw, 2rem);
-}
-
-.carousel__arrow--next {
-  inset-inline-end: clamp(0.25rem, 3vw, 2rem);
-}
-
-.carousel__arrow:disabled {
-  opacity: 0;
-  pointer-events: none;
 }
 
 /* dots */
@@ -377,50 +340,114 @@ img {
   box-shadow: 0 18px 34px -12px rgba(0, 0, 0, 0.45);
 }
 
+.contact__wa {
+  flex-shrink: 0;
+}
+
 .contact__note {
   margin-top: 1.75rem;
   font-size: 0.9rem;
   color: #bfe6df;
 }
 
+/* ---------- Footer ---------- */
 .footer {
-  background: #0f2a27;
-  color: #7fb2ab;
-  text-align: center;
-  font-size: 0.85rem;
-  padding-block: 1.75rem;
+  background: var(--seafoam);
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  padding-block: 2rem;
+}
+
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+}
+
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.footer__name {
+  font-family: var(--font-serif), serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+
+.footer__role {
+  font-size: 0.82rem;
+  color: var(--aqua);
+  letter-spacing: 0.02em;
+}
+
+.footer__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+
+.footer__link {
+  color: var(--aqua);
+  font-weight: 700;
+  text-decoration: none;
+  direction: ltr;
+}
+
+.footer__link:hover {
+  text-decoration: underline;
+}
+
+.footer__copy {
+  font-size: 0.8rem;
+  color: var(--muted);
 }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 720px) {
-  /* Mobile hero: portrait (right) sits beside the name + welcome (left) at a
-     matching height, and the full story flows below across the whole width —
-     readable, not a narrow ribbon. */
+  /* Mobile hero: the name gets its own full-width row (so it stays on one
+     line), the portrait (right) sits beside the welcome (left) beneath it, and
+     the full story flows across the whole width below. */
   .hero__grid {
-    /* RTL: first column track sits on the right → portrait right, intro left. */
-    grid-template-columns: minmax(128px, 158px) 1fr;
+    /* RTL: first column track sits on the right → portrait right, welcome left. */
+    grid-template-columns: minmax(140px, 165px) 1fr;
     grid-template-areas:
-      "portrait intro"
+      "name name"
+      "portrait welcome"
       "story story";
     align-items: start;
     column-gap: 1.1rem;
-    row-gap: 1.1rem;
+    row-gap: 0.9rem;
   }
-  .hero__story {
+  .hero__story,
+  .hero__intro {
     display: contents;
   }
-  .hero__intro {
-    grid-area: intro;
+  .hero__name {
+    grid-area: name;
+    white-space: nowrap;
+    font-size: clamp(2rem, 8vw, 2.4rem);
+    margin-bottom: 0;
+  }
+  .hero__welcome {
+    grid-area: welcome;
     align-self: center;
+    margin: 0;
   }
   .hero__portrait {
     grid-area: portrait;
-    max-width: 158px;
+    max-width: 165px;
     margin: 0;
   }
   .hero__story > .quote {
     grid-area: story;
     max-width: 60ch;
+    margin-top: 0.25rem;
   }
   .feature__grid {
     grid-template-columns: 1fr;
@@ -433,6 +460,15 @@ img {
   .feature--quote-start .feature__text,
   .feature--quote-end .feature__text {
     order: 2;
+  }
+  .footer__inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.9rem;
+  }
+  .footer__brand,
+  .footer__meta {
+    align-items: center;
   }
 }
 

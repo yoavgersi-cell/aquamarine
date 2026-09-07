@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type Artwork = {
   src: string;
@@ -13,74 +13,123 @@ export type Artwork = {
 
 export function Carousel({ items }: { items: Artwork[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
+  // activeRaw = index of the centred slide within the doubled list.
+  const [activeRaw, setActiveRaw] = useState(0);
+  const n = items.length;
+  // Render the set twice so we can scroll one past the end and snap back
+  // invisibly — a seamless infinite loop.
+  const slides = [...items, ...items];
+  const active = activeRaw % n;
 
-  // Scroll a given slide to the center. scrollIntoView({inline:"center"})
-  // handles RTL automatically, so no manual scroll-direction math.
-  const goTo = useCallback(
-    (i: number) => {
-      const track = trackRef.current;
-      if (!track) return;
-      const clamped = Math.max(0, Math.min(items.length - 1, i));
-      const slide = track.children[clamped] as HTMLElement | undefined;
-      slide?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-    },
-    [items.length],
-  );
-
-  // Derive the active slide from whichever one is nearest the track centre.
-  // Using getBoundingClientRect keeps this correct under RTL scrolling.
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
-    let raf = 0;
-    const update = () => {
+
+    const kids = () => Array.from(track.children) as HTMLElement[];
+
+    const centeredIndex = () => {
       const rect = track.getBoundingClientRect();
       const mid = rect.left + rect.width / 2;
       let best = 0;
-      let bestDist = Infinity;
-      Array.from(track.children).forEach((child, i) => {
-        const r = (child as HTMLElement).getBoundingClientRect();
+      let bestD = Infinity;
+      kids().forEach((c, i) => {
+        const r = c.getBoundingClientRect();
         const d = Math.abs(r.left + r.width / 2 - mid);
-        if (d < bestDist) {
-          bestDist = d;
+        if (d < bestD) {
+          bestD = d;
           best = i;
         }
       });
-      setActive(best);
+      return best;
     };
+
+    const scrollToIndex = (i: number, smooth: boolean) => {
+      kids()[i]?.scrollIntoView({
+        behavior: smooth ? "smooth" : "auto",
+        inline: "center",
+        block: "nearest",
+      });
+    };
+
+    // Start centred on the first artwork.
+    scrollToIndex(0, false);
+    setActiveRaw(0);
+
+    // Keep the active dot in sync while the user scrolls/swipes.
+    let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(update);
+      raf = requestAnimationFrame(() => setActiveRaw(centeredIndex()));
     };
     track.addEventListener("scroll", onScroll, { passive: true });
-    update();
+
+    // Pause the auto-loop while the visitor is interacting.
+    let paused = false;
+    const pause = () => {
+      paused = true;
+    };
+    const resume = () => {
+      paused = false;
+    };
+    track.addEventListener("pointerdown", pause);
+    track.addEventListener("pointerenter", pause);
+    track.addEventListener("pointerup", resume);
+    track.addEventListener("pointerleave", resume);
+
+    // Auto-advance, unless the visitor prefers reduced motion.
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let timer = 0;
+    let resetT = 0;
+    if (!reduce) {
+      timer = window.setInterval(() => {
+        if (paused) return;
+        const cur = centeredIndex();
+        const nextIdx = cur + 1;
+        if (nextIdx >= slides.length) {
+          scrollToIndex(0, false);
+          return;
+        }
+        scrollToIndex(nextIdx, true);
+        // Stepping onto a cloned slide → jump back to its twin invisibly.
+        if (nextIdx >= n) {
+          clearTimeout(resetT);
+          resetT = window.setTimeout(() => scrollToIndex(nextIdx - n, false), 700);
+        }
+      }, 3200);
+    }
+
     return () => {
       track.removeEventListener("scroll", onScroll);
+      track.removeEventListener("pointerdown", pause);
+      track.removeEventListener("pointerenter", pause);
+      track.removeEventListener("pointerup", resume);
+      track.removeEventListener("pointerleave", resume);
       cancelAnimationFrame(raf);
+      clearInterval(timer);
+      clearTimeout(resetT);
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [n]);
+
+  const goTo = (i: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+    (track.children[i] as HTMLElement | undefined)?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  };
 
   return (
     <div className="carousel">
-      {/* In RTL, earlier items sit to the right and later items to the left,
-          so the "previous" control lives on the right and "next" on the left. */}
-      <button
-        type="button"
-        className="carousel__arrow carousel__arrow--prev"
-        aria-label="היצירה הקודמת"
-        onClick={() => goTo(active - 1)}
-        disabled={active === 0}
-      >
-        <span dir="ltr" aria-hidden="true">›</span>
-      </button>
-
       <div className="carousel__track" ref={trackRef} role="list">
-        {items.map((it, i) => (
+        {slides.map((it, i) => (
           <figure
-            key={it.src}
-            className={"carousel__item" + (i === active ? " is-active" : "")}
+            key={i}
+            className={"carousel__item" + (i === activeRaw ? " is-active" : "")}
             role="listitem"
+            aria-hidden={i >= n ? true : undefined}
           >
             <div className="carousel__frame">
               <Image
@@ -97,16 +146,6 @@ export function Carousel({ items }: { items: Artwork[] }) {
           </figure>
         ))}
       </div>
-
-      <button
-        type="button"
-        className="carousel__arrow carousel__arrow--next"
-        aria-label="היצירה הבאה"
-        onClick={() => goTo(active + 1)}
-        disabled={active === items.length - 1}
-      >
-        <span dir="ltr" aria-hidden="true">‹</span>
-      </button>
 
       <div className="carousel__dots" aria-label="ניווט בין היצירות">
         {items.map((it, i) => (
