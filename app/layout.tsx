@@ -18,9 +18,9 @@ const frankRuhl = Frank_Ruhl_Libre({
 });
 
 export const metadata: Metadata = {
-  title: "Aquamarine — אמנות",
+  title: "Marine Attia Zohar — אמנות",
   description:
-    "דף הבית של האמנית — הסיפור, היצירות, והזמנות מראש. גלריה אישית ופרטי יצירת קשר.",
+    "Marine Attia Zohar — אמנית רב-תחומית. הסיפור, היצירות, והזמנות מראש. גלריה אישית ופרטי יצירת קשר.",
 };
 
 export default function RootLayout({

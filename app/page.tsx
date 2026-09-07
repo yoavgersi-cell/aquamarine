@@ -8,8 +8,8 @@ import { Carousel, type Artwork } from "./carousel";
  * ========================================================================= */
 
 const ARTIST = {
-  name: "אקוומרין",
-  subtitle: "Aquamarine",
+  name: "Marine Attia Zohar",
+  subtitle: "אמנית רב-תחומית", // תת-כותרת קטנה מתחת לשם
   phone: "050-000-0000", // ← להחליף במספר האמיתי
 };
 

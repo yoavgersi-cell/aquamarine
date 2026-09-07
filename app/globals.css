@@ -119,13 +119,12 @@ img {
 
 .hero__name span {
   display: block;
-  font-size: 0.42em;
-  letter-spacing: 0.35em;
+  font-size: 0.34em;
+  letter-spacing: 0.12em;
   font-weight: 500;
   font-style: normal;
   color: var(--aqua);
-  text-transform: uppercase;
-  margin-top: 0.6rem;
+  margin-top: 0.55rem;
 }
 
 .hero__welcome {
