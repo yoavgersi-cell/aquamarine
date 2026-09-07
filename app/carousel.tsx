@@ -13,103 +13,40 @@ export type Artwork = {
 
 export function Carousel({ items }: { items: Artwork[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
-  // activeRaw = index of the centred slide within the doubled list.
-  const [activeRaw, setActiveRaw] = useState(0);
-  const n = items.length;
-  // Render the set twice so we can scroll one past the end and snap back
-  // invisibly — a seamless infinite loop.
-  const slides = [...items, ...items];
-  const active = activeRaw % n;
+  const [active, setActive] = useState(0);
 
+  // Keep the active dot in sync with whichever slide is centred while the
+  // visitor swipes/scrolls. No arrows, no auto-advance — manual only.
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
-
-    const kids = () => Array.from(track.children) as HTMLElement[];
-
-    const centeredIndex = () => {
+    let raf = 0;
+    const update = () => {
       const rect = track.getBoundingClientRect();
       const mid = rect.left + rect.width / 2;
       let best = 0;
       let bestD = Infinity;
-      kids().forEach((c, i) => {
-        const r = c.getBoundingClientRect();
+      Array.from(track.children).forEach((child, i) => {
+        const r = (child as HTMLElement).getBoundingClientRect();
         const d = Math.abs(r.left + r.width / 2 - mid);
         if (d < bestD) {
           bestD = d;
           best = i;
         }
       });
-      return best;
+      setActive(best);
     };
-
-    const scrollToIndex = (i: number, smooth: boolean) => {
-      kids()[i]?.scrollIntoView({
-        behavior: smooth ? "smooth" : "auto",
-        inline: "center",
-        block: "nearest",
-      });
-    };
-
-    // Start centred on the first artwork.
-    scrollToIndex(0, false);
-    setActiveRaw(0);
-
-    // Keep the active dot in sync while the user scrolls/swipes.
-    let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => setActiveRaw(centeredIndex()));
+      raf = requestAnimationFrame(update);
     };
     track.addEventListener("scroll", onScroll, { passive: true });
-
-    // Pause the auto-loop while the visitor is interacting.
-    let paused = false;
-    const pause = () => {
-      paused = true;
-    };
-    const resume = () => {
-      paused = false;
-    };
-    track.addEventListener("pointerdown", pause);
-    track.addEventListener("pointerenter", pause);
-    track.addEventListener("pointerup", resume);
-    track.addEventListener("pointerleave", resume);
-
-    // Auto-advance, unless the visitor prefers reduced motion.
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let timer = 0;
-    let resetT = 0;
-    if (!reduce) {
-      timer = window.setInterval(() => {
-        if (paused) return;
-        const cur = centeredIndex();
-        const nextIdx = cur + 1;
-        if (nextIdx >= slides.length) {
-          scrollToIndex(0, false);
-          return;
-        }
-        scrollToIndex(nextIdx, true);
-        // Stepping onto a cloned slide → jump back to its twin invisibly.
-        if (nextIdx >= n) {
-          clearTimeout(resetT);
-          resetT = window.setTimeout(() => scrollToIndex(nextIdx - n, false), 700);
-        }
-      }, 3200);
-    }
-
+    update();
     return () => {
       track.removeEventListener("scroll", onScroll);
-      track.removeEventListener("pointerdown", pause);
-      track.removeEventListener("pointerenter", pause);
-      track.removeEventListener("pointerup", resume);
-      track.removeEventListener("pointerleave", resume);
       cancelAnimationFrame(raf);
-      clearInterval(timer);
-      clearTimeout(resetT);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [n]);
+  }, []);
 
   const goTo = (i: number) => {
     const track = trackRef.current;
@@ -124,12 +61,11 @@ export function Carousel({ items }: { items: Artwork[] }) {
   return (
     <div className="carousel">
       <div className="carousel__track" ref={trackRef} role="list">
-        {slides.map((it, i) => (
+        {items.map((it, i) => (
           <figure
-            key={i}
-            className={"carousel__item" + (i === activeRaw ? " is-active" : "")}
+            key={it.src}
+            className={"carousel__item" + (i === active ? " is-active" : "")}
             role="listitem"
-            aria-hidden={i >= n ? true : undefined}
           >
             <div className="carousel__frame">
               <Image

@@ -392,44 +392,33 @@ img {
 
 /* ---------- Responsive ---------- */
 @media (max-width: 720px) {
-  /* Mobile hero: the name gets its own full-width row (so it stays on one
-     line), the portrait (right) sits beside the welcome (left) beneath it, and
-     the full story flows across the whole width below. */
+  /* Mobile hero: portrait (right) sits beside the name + welcome (left) at a
+     matching height, and the full story flows below across the whole width. */
   .hero__grid {
-    /* RTL: first column track sits on the right → portrait right, welcome left. */
-    grid-template-columns: minmax(140px, 165px) 1fr;
+    /* RTL: first column track sits on the right → portrait right, intro left. */
+    grid-template-columns: minmax(128px, 158px) 1fr;
     grid-template-areas:
-      "name name"
-      "portrait welcome"
+      "portrait intro"
       "story story";
     align-items: start;
     column-gap: 1.1rem;
-    row-gap: 0.9rem;
+    row-gap: 1.1rem;
   }
-  .hero__story,
-  .hero__intro {
+  .hero__story {
     display: contents;
   }
-  .hero__name {
-    grid-area: name;
-    white-space: nowrap;
-    font-size: clamp(2rem, 8vw, 2.4rem);
-    margin-bottom: 0;
-  }
-  .hero__welcome {
-    grid-area: welcome;
+  .hero__intro {
+    grid-area: intro;
     align-self: center;
-    margin: 0;
   }
   .hero__portrait {
     grid-area: portrait;
-    max-width: 165px;
+    max-width: 158px;
     margin: 0;
   }
   .hero__story > .quote {
     grid-area: story;
     max-width: 60ch;
-    margin-top: 0.25rem;
   }
   .feature__grid {
     grid-template-columns: 1fr;
