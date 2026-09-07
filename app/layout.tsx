@@ -18,9 +18,9 @@ const frankRuhl = Frank_Ruhl_Libre({
 });
 
 export const metadata: Metadata = {
-  title: "Marine Attia Zohar — אמנות",
+  title: "מרין עטיה זוהר — אמנות",
   description:
-    "Marine Attia Zohar — אמנית רב-תחומית. הסיפור, היצירות, והזמנות מראש. גלריה אישית ופרטי יצירת קשר.",
+    "מרין עטיה זוהר — אמנית רב-תחומית. הסיפור, היצירות, והזמנות מראש. גלריה אישית ופרטי יצירת קשר.",
 };
 
 export default function RootLayout({
