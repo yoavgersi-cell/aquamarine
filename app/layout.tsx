@@ -18,9 +18,9 @@ const frankRuhl = Frank_Ruhl_Libre({
 });
 
 export const metadata: Metadata = {
-  title: "מרין עטיה זוהר — אמנות",
+  title: "מרין אטייה זוהר — אמנות",
   description:
-    "מרין עטיה זוהר — אמנית רב-תחומית. הסיפור, היצירות, והזמנות מראש. גלריה אישית ופרטי יצירת קשר.",
+    "מרין אטייה זוהר — אמנית רב-תחומית. הסיפור, היצירות, והזמנות מראש. גלריה אישית ופרטי יצירת קשר.",
 };
 
 export default function RootLayout({
