@@ -95,14 +95,17 @@ img {
 
 .hero__grid {
   display: grid;
-  /* RTL: first track sits on the right. Portrait → right, story → left (wider). */
-  grid-template-columns: 0.85fr 1.15fr;
-  gap: clamp(1.25rem, 4vw, 3rem);
+  /* RTL: first track sits on the right. Portrait → right, story → left (wider).
+     Proportional so it stays balanced on mobile; the portrait image itself is
+     capped via max-width on desktop. */
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: clamp(1.5rem, 5vw, 4rem);
   align-items: center;
 }
 
 .hero__story {
   order: 2;
+  max-width: 540px;
 }
 
 .hero__name {
@@ -128,6 +131,10 @@ img {
 .hero__portrait {
   order: 1;
   position: relative;
+  width: 100%;
+  max-width: 300px;
+  /* hug the right (inline-start) edge of the hero */
+  margin-inline-end: auto;
 }
 
 .hero__portrait img {
@@ -226,13 +233,24 @@ img {
 .feature__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(1.5rem, 5vw, 3.5rem);
+  gap: clamp(1.5rem, 5vw, 4rem);
   align-items: center;
+}
+
+.feature__text {
+  max-width: 460px;
+  margin-inline: auto;
+}
+
+.feature__art {
+  display: flex;
+  justify-content: center;
 }
 
 .feature__art img {
   width: 100%;
   height: auto;
+  max-width: 360px;
   border-radius: 14px;
   box-shadow: var(--shadow);
   aspect-ratio: 4 / 5;
