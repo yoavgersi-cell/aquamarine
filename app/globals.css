@@ -195,8 +195,9 @@ img {
   gap: clamp(0.75rem, 3vw, 1.25rem);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  /* leading/trailing space so the first and last cards can reach the centre */
-  padding: 0.5rem calc(50% - min(40vw, 180px)) 1.5rem;
+  /* Full-bleed: cards fill edge to edge and the loop is endless, so there is
+     always artwork on both sides — never empty space beside the centred card. */
+  padding: 0.5rem 0 1.5rem;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -206,14 +207,8 @@ img {
 }
 
 .carousel__item {
-  flex: 0 0 min(80vw, 360px);
+  flex: 0 0 min(80vw, 340px);
   scroll-snap-align: center;
-  opacity: 0.4;
-  transition: opacity 0.35s ease;
-}
-
-.carousel__item.is-active {
-  opacity: 1;
 }
 
 .carousel__frame {
