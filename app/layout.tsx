@@ -49,7 +49,17 @@ export default function RootLayout({
       dir="rtl"
       className={`${assistant.variable} ${frankRuhl.variable} ${suezOne.variable} ${rubik.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {/* Always open at the top: stop the browser from restoring the previous
+            scroll position on refresh, and pin to the top on first load. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if('scrollRestoration' in history)history.scrollRestoration='manual';window.scrollTo(0,0);}catch(e){}",
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

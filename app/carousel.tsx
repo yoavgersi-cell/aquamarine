@@ -1,7 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+
+// Run the centring before the browser paints so the carousel never visibly
+// jumps from its edge to the centred slide. Falls back to useEffect on the
+// server to avoid the SSR warning.
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export type Artwork = {
   src: string;
@@ -20,7 +26,7 @@ export function Carousel({ items }: { items: Artwork[] }) {
   // because the copies are pixel-identical exactly one copy-width apart.
   const loop = [...items, ...items, ...items];
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const track = trackRef.current;
     if (!track) return;
     const kids = () => Array.from(track.children) as HTMLElement[];
