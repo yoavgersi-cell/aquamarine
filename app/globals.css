@@ -397,12 +397,12 @@ img {
      matching height, and the full story flows below across the whole width. */
   .hero__grid {
     /* RTL: first column track sits on the right → portrait right, intro left. */
-    grid-template-columns: minmax(128px, 158px) 1fr;
+    grid-template-columns: minmax(112px, 132px) 1fr;
     grid-template-areas:
       "portrait intro"
       "story story";
-    align-items: start;
-    column-gap: 1.1rem;
+    align-items: center;
+    column-gap: 0.9rem;
     row-gap: 1.1rem;
   }
   .hero__story {
@@ -412,9 +412,15 @@ img {
     grid-area: intro;
     align-self: center;
   }
+  /* keep the name on one line beside the portrait */
+  .hero__name {
+    white-space: nowrap;
+    font-size: clamp(1.35rem, 6.4vw, 2.1rem);
+    margin-bottom: 1rem;
+  }
   .hero__portrait {
     grid-area: portrait;
-    max-width: 158px;
+    max-width: 132px;
     margin: 0;
   }
   .hero__story > .quote {
