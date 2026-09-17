@@ -266,6 +266,22 @@ img {
   width: 24px;
 }
 
+/* Note below the carousel — same section/background, centred */
+.gallery__note {
+  max-width: 720px;
+  margin-inline: auto;
+  margin-top: clamp(1.75rem, 4vw, 2.75rem);
+  text-align: center;
+}
+
+.quote--center {
+  text-align: center;
+}
+
+.quote--center::before {
+  display: none;
+}
+
 /* ---------- Feature (alternating quote + artwork) ---------- */
 .feature__grid {
   display: grid;
