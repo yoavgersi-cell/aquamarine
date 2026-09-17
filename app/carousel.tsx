@@ -41,16 +41,21 @@ export function Carousel({ items }: { items: Artwork[] }) {
       return best;
     };
 
-    const scrollToIndex = (i: number, smooth: boolean) => {
-      kids()[i]?.scrollIntoView({
-        behavior: smooth ? "smooth" : "auto",
-        inline: "center",
-        block: "nearest",
-      });
+    // Centre a slide by scrolling ONLY the track horizontally (never the page).
+    // scrollIntoView would scroll the window vertically to the carousel, which
+    // made the page open scrolled to the middle. getBoundingClientRect + scrollBy
+    // are physical-pixel based, so this is also RTL-safe.
+    const centerOn = (i: number, smooth: boolean) => {
+      const el = kids()[i];
+      if (!el) return;
+      const tr = track.getBoundingClientRect();
+      const er = el.getBoundingClientRect();
+      const delta = er.left + er.width / 2 - (tr.left + tr.width / 2);
+      track.scrollBy({ left: delta, behavior: smooth ? "smooth" : "auto" });
     };
 
     // Begin centred on the first artwork of the middle copy.
-    scrollToIndex(n, false);
+    centerOn(n, false);
     setActive(0);
 
     let raf = 0;
@@ -64,7 +69,7 @@ export function Carousel({ items }: { items: Artwork[] }) {
         clearTimeout(settle);
         settle = window.setTimeout(() => {
           const c = centeredIndex();
-          if (c < n || c >= 2 * n) scrollToIndex((c % n) + n, false);
+          if (c < n || c >= 2 * n) centerOn((c % n) + n, false);
         }, 130);
       });
     };
@@ -80,11 +85,13 @@ export function Carousel({ items }: { items: Artwork[] }) {
   const goTo = (real: number) => {
     const track = trackRef.current;
     if (!track) return;
-    (track.children[real + n] as HTMLElement | undefined)?.scrollIntoView({
-      behavior: "smooth",
-      inline: "center",
-      block: "nearest",
-    });
+    const el = track.children[real + n] as HTMLElement | undefined;
+    if (!el) return;
+    // Horizontal-only centering (see centerOn above) — never scrolls the page.
+    const tr = track.getBoundingClientRect();
+    const er = el.getBoundingClientRect();
+    const delta = er.left + er.width / 2 - (tr.left + tr.width / 2);
+    track.scrollBy({ left: delta, behavior: "smooth" });
   };
 
   return (
