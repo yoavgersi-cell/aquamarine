@@ -33,6 +33,7 @@ const GALLERY: Artwork[] = [
   { src: "/art-hummingbird.png", alt: "יונק דבש במעופו", w: 1454, h: 1082 },
   { src: "/art-hummingbird2.png", alt: "יונק דבש", w: 1131, h: 1391 },
   { src: "/art-lego.png", alt: "יצירת לגו בהתאמה אישית", w: 1410, h: 1115 },
+  { src: "/art-lions.png", alt: "לביאה עם שני גורים", w: 1129, h: 1393 },
 ];
 
 // סקשן 1 — ציטוט מימין, יצירה משמאל
