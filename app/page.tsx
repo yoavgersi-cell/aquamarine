@@ -28,6 +28,11 @@ const GALLERY: Artwork[] = [
   { src: "/art-zebra.png", alt: "זברה עם זר עלים", w: 1129, h: 1393 },
   { src: "/art-cactus.png", alt: "קקטוס פורח במדבר", w: 1131, h: 1391 },
   { src: "/art-whaleshark.png", alt: "כריש לווייתני בין דגים צבעוניים", w: 1197, h: 1314 },
+  { src: "/art-orca.png", alt: "לווייתן קטלן (אורקה)", w: 1445, h: 1089 },
+  { src: "/art-turtle.png", alt: "צב ים", w: 1419, h: 1108 },
+  { src: "/art-hummingbird.png", alt: "יונק דבש במעופו", w: 1454, h: 1082 },
+  { src: "/art-hummingbird2.png", alt: "יונק דבש", w: 1131, h: 1391 },
+  { src: "/art-lego.png", alt: "יצירת לגו בהתאמה אישית", w: 1410, h: 1115 },
 ];
 
 // סקשן 1 — ציטוט מימין, יצירה משמאל

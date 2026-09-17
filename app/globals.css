@@ -230,7 +230,9 @@ img {
 .carousel__frame img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /* contain (not cover) so landscape works aren't cropped — the whole piece
+     shows inside each card, letterboxed on the card background as needed. */
+  object-fit: contain;
 }
 
 .carousel__caption {
