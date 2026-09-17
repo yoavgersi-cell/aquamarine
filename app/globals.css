@@ -48,7 +48,7 @@ img {
   font-family: var(--font-serif), Georgia, "Times New Roman", serif;
   font-style: italic;
   font-weight: 500;
-  font-size: clamp(1.25rem, 2.4vw, 1.7rem);
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
   line-height: 1.6;
   color: var(--ink);
   margin: 0;
@@ -109,10 +109,10 @@ img {
 }
 
 .hero__name {
-  font-family: var(--font-serif), serif;
+  font-family: var(--font-display), var(--font-serif), serif;
   font-weight: 700;
   font-size: clamp(2.4rem, 7vw, 3.6rem);
-  line-height: 1.05;
+  line-height: 1.1;
   margin: 0 0 1.5rem;
   letter-spacing: -0.01em;
 }
@@ -128,9 +128,9 @@ img {
 }
 
 .hero__welcome {
-  font-family: var(--font-serif), serif;
-  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
-  font-weight: 500;
+  font-family: var(--font-display), var(--font-serif), serif;
+  font-size: clamp(1.15rem, 2.2vw, 1.4rem);
+  font-weight: 400;
   color: var(--aqua);
   margin: 0 0 0.75rem;
   text-wrap: balance;
