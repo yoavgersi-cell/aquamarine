@@ -31,14 +31,15 @@ export function Carousel({ items }: { items: Artwork[] }) {
     if (!track) return;
     const kids = () => Array.from(track.children) as HTMLElement[];
 
-    const centeredIndex = () => {
-      const rect = track.getBoundingClientRect();
-      const mid = rect.left + rect.width / 2;
+    // The "current" slide is the one snapped to the start edge (the right edge
+    // in RTL). Comparing right-edge distances keeps this RTL-safe.
+    const startIndex = () => {
+      const tr = track.getBoundingClientRect();
       let best = 0;
       let bestD = Infinity;
       kids().forEach((c, i) => {
         const r = c.getBoundingClientRect();
-        const d = Math.abs(r.left + r.width / 2 - mid);
+        const d = Math.abs(r.right - tr.right);
         if (d < bestD) {
           bestD = d;
           best = i;
@@ -47,21 +48,22 @@ export function Carousel({ items }: { items: Artwork[] }) {
       return best;
     };
 
-    // Centre a slide by scrolling ONLY the track horizontally (never the page).
-    // scrollIntoView would scroll the window vertically to the carousel, which
-    // made the page open scrolled to the middle. getBoundingClientRect + scrollBy
-    // are physical-pixel based, so this is also RTL-safe.
-    const centerOn = (i: number, smooth: boolean) => {
+    // Align a slide to the start edge by scrolling ONLY the track horizontally
+    // (never the page). getBoundingClientRect + scrollBy are physical-pixel
+    // based, so this is RTL-safe.
+    const alignStart = (i: number, smooth: boolean) => {
       const el = kids()[i];
       if (!el) return;
       const tr = track.getBoundingClientRect();
       const er = el.getBoundingClientRect();
-      const delta = er.left + er.width / 2 - (tr.left + tr.width / 2);
+      const delta = er.right - tr.right;
       track.scrollBy({ left: delta, behavior: smooth ? "smooth" : "auto" });
     };
 
-    // Begin centred on the first artwork of the middle copy.
-    centerOn(n, false);
+    // Do NOT scroll on load: any client-side scroll happens after the first
+    // paint, so it would visibly jump. The natural start position already snaps
+    // the first artwork to the start edge; the seamless reposition below kicks
+    // in only once the visitor actually swipes.
     setActive(0);
 
     let raf = 0;
@@ -69,13 +71,14 @@ export function Carousel({ items }: { items: Artwork[] }) {
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
-        setActive(centeredIndex() % n);
-        // Once scrolling settles, recentre into the middle copy if we drifted
-        // into an edge copy.
+        setActive(startIndex() % n);
+        // Once scrolling settles, hop to the matching slide in the middle copy
+        // (identical, exactly one copy-width away → invisible) so the loop is
+        // endless in both directions.
         clearTimeout(settle);
         settle = window.setTimeout(() => {
-          const c = centeredIndex();
-          if (c < n || c >= 2 * n) centerOn((c % n) + n, false);
+          const c = startIndex();
+          if (c < n || c >= 2 * n) alignStart((c % n) + n, false);
         }, 130);
       });
     };
@@ -93,10 +96,10 @@ export function Carousel({ items }: { items: Artwork[] }) {
     if (!track) return;
     const el = track.children[real + n] as HTMLElement | undefined;
     if (!el) return;
-    // Horizontal-only centering (see centerOn above) — never scrolls the page.
+    // Align the chosen slide to the start edge; horizontal-only (never the page).
     const tr = track.getBoundingClientRect();
     const er = el.getBoundingClientRect();
-    const delta = er.left + er.width / 2 - (tr.left + tr.width / 2);
+    const delta = er.right - tr.right;
     track.scrollBy({ left: delta, behavior: "smooth" });
   };
 

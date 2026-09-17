@@ -216,7 +216,7 @@ img {
 
 .carousel__item {
   flex: 0 0 min(80vw, 340px);
-  scroll-snap-align: center;
+  scroll-snap-align: start;
 }
 
 .carousel__frame {
