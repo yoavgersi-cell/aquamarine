@@ -57,22 +57,36 @@ export function Carousel({ items }: { items: Artwork[] }) {
       track.scrollBy({ left: delta, behavior: smooth ? "smooth" : "auto" });
     };
 
+    // Hop to the identical slide in the middle copy — but only once scrolling
+    // has fully STOPPED, and with snap momentarily off so the browser can't
+    // re-snap and slide visibly. The copies are pixel-identical exactly one
+    // copy-width apart, so the hop is invisible.
+    let repositioning = false;
+    const reposition = () => {
+      const c = currentIndex();
+      if (c >= n && c < 2 * n) return; // already in the middle copy
+      const el = kids()[(c % n) + n];
+      if (!el) return;
+      repositioning = true;
+      const prevSnap = track.style.scrollSnapType;
+      track.style.scrollSnapType = "none";
+      const delta = edgeX(el.getBoundingClientRect()) - refX();
+      track.scrollBy({ left: delta, behavior: "auto" });
+      void track.offsetWidth; // flush before re-enabling snap (no animation)
+      track.style.scrollSnapType = prevSnap;
+      repositioning = false;
+    };
+
     setActive(0);
 
     let raf = 0;
     let settle = 0;
     const onScroll = () => {
+      if (repositioning) return;
       cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        setActive(currentIndex() % n);
-        clearTimeout(settle);
-        settle = window.setTimeout(() => {
-          const c = currentIndex();
-          // Hop to the identical slide in the middle copy (one copy-width away →
-          // invisible) so the loop is endless in both directions.
-          if (c < n || c >= 2 * n) alignTo((c % n) + n, false);
-        }, 130);
-      });
+      raf = requestAnimationFrame(() => setActive(currentIndex() % n));
+      clearTimeout(settle);
+      settle = window.setTimeout(reposition, 160);
     };
     track.addEventListener("scroll", onScroll, { passive: true });
 
