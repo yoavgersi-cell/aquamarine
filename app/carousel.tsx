@@ -1,13 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-
-// Run the centring before the browser paints so the carousel never visibly
-// jumps from its edge to the centred slide. Falls back to useEffect on the
-// server to avoid the SSR warning.
-const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+import { useEffect, useRef, useState } from "react";
 
 export type Artwork = {
   src: string;
@@ -21,25 +15,32 @@ export function Carousel({ items }: { items: Artwork[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const n = items.length;
-  // Three identical copies give a seamless, endless manual loop: scroll into an
-  // edge copy and we jump to the matching card in the middle copy — invisibly,
-  // because the copies are pixel-identical exactly one copy-width apart.
+  // Three identical copies → a seamless endless manual loop. We never scroll on
+  // load (that would jump after the first paint); CSS puts the first card at its
+  // resting snap position, and we only reposition once the visitor swipes.
   const loop = [...items, ...items, ...items];
 
-  useIsomorphicLayoutEffect(() => {
+  useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
     const kids = () => Array.from(track.children) as HTMLElement[];
 
-    // The "current" slide is the one snapped to the start edge (the right edge
-    // in RTL). Comparing right-edge distances keeps this RTL-safe.
-    const startIndex = () => {
+    // Mobile snaps cards to centre; desktop snaps to the start (fills the row).
+    // The reference point and each card's alignment edge follow that, all in
+    // physical pixels so the math is RTL-safe.
+    const isMobile = () => window.matchMedia("(max-width: 720px)").matches;
+    const refX = () => {
       const tr = track.getBoundingClientRect();
+      return isMobile() ? tr.left + tr.width / 2 : tr.right;
+    };
+    const edgeX = (r: DOMRect) => (isMobile() ? r.left + r.width / 2 : r.right);
+
+    const currentIndex = () => {
+      const ref = refX();
       let best = 0;
       let bestD = Infinity;
       kids().forEach((c, i) => {
-        const r = c.getBoundingClientRect();
-        const d = Math.abs(r.right - tr.right);
+        const d = Math.abs(edgeX(c.getBoundingClientRect()) - ref);
         if (d < bestD) {
           bestD = d;
           best = i;
@@ -48,22 +49,14 @@ export function Carousel({ items }: { items: Artwork[] }) {
       return best;
     };
 
-    // Align a slide to the start edge by scrolling ONLY the track horizontally
-    // (never the page). getBoundingClientRect + scrollBy are physical-pixel
-    // based, so this is RTL-safe.
-    const alignStart = (i: number, smooth: boolean) => {
+    // Scroll ONLY the track horizontally (never the page).
+    const alignTo = (i: number, smooth: boolean) => {
       const el = kids()[i];
       if (!el) return;
-      const tr = track.getBoundingClientRect();
-      const er = el.getBoundingClientRect();
-      const delta = er.right - tr.right;
+      const delta = edgeX(el.getBoundingClientRect()) - refX();
       track.scrollBy({ left: delta, behavior: smooth ? "smooth" : "auto" });
     };
 
-    // Do NOT scroll on load: any client-side scroll happens after the first
-    // paint, so it would visibly jump. The natural start position already snaps
-    // the first artwork to the start edge; the seamless reposition below kicks
-    // in only once the visitor actually swipes.
     setActive(0);
 
     let raf = 0;
@@ -71,14 +64,13 @@ export function Carousel({ items }: { items: Artwork[] }) {
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
-        setActive(startIndex() % n);
-        // Once scrolling settles, hop to the matching slide in the middle copy
-        // (identical, exactly one copy-width away → invisible) so the loop is
-        // endless in both directions.
+        setActive(currentIndex() % n);
         clearTimeout(settle);
         settle = window.setTimeout(() => {
-          const c = startIndex();
-          if (c < n || c >= 2 * n) alignStart((c % n) + n, false);
+          const c = currentIndex();
+          // Hop to the identical slide in the middle copy (one copy-width away →
+          // invisible) so the loop is endless in both directions.
+          if (c < n || c >= 2 * n) alignTo((c % n) + n, false);
         }, 130);
       });
     };
@@ -89,6 +81,7 @@ export function Carousel({ items }: { items: Artwork[] }) {
       cancelAnimationFrame(raf);
       clearTimeout(settle);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [n]);
 
   const goTo = (real: number) => {
@@ -96,11 +89,12 @@ export function Carousel({ items }: { items: Artwork[] }) {
     if (!track) return;
     const el = track.children[real + n] as HTMLElement | undefined;
     if (!el) return;
-    // Align the chosen slide to the start edge; horizontal-only (never the page).
+    const isMobile = window.matchMedia("(max-width: 720px)").matches;
     const tr = track.getBoundingClientRect();
     const er = el.getBoundingClientRect();
-    const delta = er.right - tr.right;
-    track.scrollBy({ left: delta, behavior: "smooth" });
+    const ref = isMobile ? tr.left + tr.width / 2 : tr.right;
+    const edge = isMobile ? er.left + er.width / 2 : er.right;
+    track.scrollBy({ left: edge - ref, behavior: "smooth" });
   };
 
   return (

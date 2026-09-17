@@ -476,10 +476,14 @@ img {
   .footer__brand {
     justify-content: center;
   }
-}
-
-@media (max-width: 420px) {
+  /* Mobile: centre each card. The leading/trailing padding equals half the free
+     space, so the FIRST card is already centred at the natural load position —
+     no JS scroll, no jump. */
+  .carousel__track {
+    padding-inline: calc(50% - min(40vw, 170px));
+  }
   .carousel__item {
-    flex-basis: 84%;
+    scroll-snap-align: center;
   }
 }
+
