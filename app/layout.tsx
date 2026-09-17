@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Assistant, Frank_Ruhl_Libre, Suez_One } from "next/font/google";
+import { Assistant, Frank_Ruhl_Libre, Suez_One, Rubik } from "next/font/google";
 import "./globals.css";
 
 // Body font — clean, highly readable Hebrew sans.
@@ -25,6 +25,15 @@ const suezOne = Suez_One({
   weight: "400",
 });
 
+// Quote/body paragraphs font.
+const rubik = Rubik({
+  subsets: ["hebrew", "latin"],
+  variable: "--font-quote",
+  display: "swap",
+  style: ["normal", "italic"],
+  weight: ["400", "500"],
+});
+
 export const metadata: Metadata = {
   title: "מרין אטיה זוהר — אמנות",
   description:
@@ -38,7 +47,7 @@ export default function RootLayout({
     <html
       lang="he"
       dir="rtl"
-      className={`${assistant.variable} ${frankRuhl.variable} ${suezOne.variable}`}
+      className={`${assistant.variable} ${frankRuhl.variable} ${suezOne.variable} ${rubik.variable}`}
     >
       <body>{children}</body>
     </html>
