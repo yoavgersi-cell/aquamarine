@@ -23,6 +23,7 @@ const GALLERY: Artwork[] = [
   { src: "/art-panda.png", alt: "פנדה אדומה עם משקפיים", w: 1123, h: 1400 },
   { src: "/art-plumeria.png", alt: "פרחים לבנים מול הים", w: 1140, h: 1380 },
   { src: "/art-sculpture.png", alt: "פסל מופשט בכחול וירוק", w: 1038, h: 1515 },
+  { src: "/art-zebra.png", alt: "זברה עם זר עלים", w: 1129, h: 1393 },
   { src: "/art-cactus.png", alt: "קקטוס פורח במדבר", w: 1131, h: 1391 },
   { src: "/art-whaleshark.png", alt: "כריש לווייתני בין דגים צבעוניים", w: 1197, h: 1314 },
 ];
