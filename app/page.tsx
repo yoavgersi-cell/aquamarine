@@ -179,7 +179,7 @@ export default function Page() {
             </svg>
             <span dir="ltr">{ARTIST.phone}</span>
           </a>
-          <p className="contact__note">הזמנות מראש · עבודות בהתאמה אישית · משלוחים</p>
+          <p className="contact__note">הזמנות מראש · עבודות בהתאמה אישית</p>
         </div>
       </section>
 
